@@ -1,9 +1,12 @@
-import React from 'react'
-import { AiOutlineLogout } from 'react-icons/ai'
-import styled from 'styled-components'
-import {Link} from 'react-router-dom'
+import React from 'react';
+import { AiOutlineLogout } from 'react-icons/ai';
+import styled from 'styled-components';
+import {Link, useNavigate} from 'react-router-dom';
+import { firebaseAuth } from "../utils/firebase-config";
+
+import { onAuthStateChanged, signOut } from 'firebase/auth';
       
-const TopNav = (isScrolled) => {
+const TopNav = ({isScrolled}) => {
   
   const navlinks = [
       {name: "Home", link: '/'},
@@ -12,6 +15,12 @@ const TopNav = (isScrolled) => {
       {name: "Movies", link: '/movies'}
   ]
   
+  const navigate = useNavigate();
+
+  onAuthStateChanged(firebaseAuth, (currentUser)=>{
+    if(!currentUser) navigate('/login');
+  });
+
   return (
     <NavContainer>
       <nav className={`${isScrolled ? "scrolled" : "notScroll"}`}>
@@ -36,7 +45,7 @@ const TopNav = (isScrolled) => {
         </div>
 
         <div className='rightSide'>
-              <button>
+              <button onClick={()=>signOut(firebaseAuth)}>
                 <AiOutlineLogout/>
               </button>
         </div>
@@ -57,7 +66,7 @@ const NavContainer = styled.div`
     nav{
       position: sticky;
       top: 0;
-      height: 6rem;
+      height: 5rem;
       width: 100%;
       justify-content: space-between;
       position: fixed;
@@ -69,7 +78,7 @@ const NavContainer = styled.div`
         display: flex;
         align-items: center;
         gap: 2rem;
-      }
+      
       .logo{
         display: flex;
         justify-content: center;
@@ -81,8 +90,34 @@ const NavContainer = styled.div`
       }
     }
     .links{
-      
+      display: flex;
+      list-style-type: none;
+      gap: 2.5rem;
+      li{
+        a{
+            color: white;
+            text-decoration: none;
+        }  
+      }
     }
-`
+  }
+
+  .rightSide{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    button{
+      background-color: red;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+    }&:focus{
+        outline: none;
+    }svg{
+      color: white;
+      font-size: 2rem;
+    }
+  }
+`;
 
 export default TopNav

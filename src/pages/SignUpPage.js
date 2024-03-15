@@ -94,19 +94,20 @@ const Container = styled.div`
       padding: 0 22rem;
     }
     h4 {
-      margin-top: -1.5rem;
+      margin-top: 1.5rem;
     }
     h6 {
-      margin-top: -1rem;
+      margin-top: 1rem;
     }  
   }
     .form {
       display: grid;
       width: 60%;
+      padding: 2.5rem;
       grid-template-columns: ${({showPassword})=>showPassword? "1fr 1fr" : "2fr 1fr"};
       input { 
         color: black;
-        padding: 1.5rem;
+        padding: 1.2rem;
         font-size: 1.2rem;
         border-radius: 0.8rem;
         width: 35rem;
