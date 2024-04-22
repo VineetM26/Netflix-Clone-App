@@ -1,11 +1,14 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import styled from "styled-components";
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { FaPlay } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 
 import TopNav from '../components/TopNav';
 import Card from "../components/card";
+import { fetchMovies, getGenres } from '../store';
+import SliderContainer from '../components/SliderContainer';
 
 const Netflix = () => {
 
@@ -13,11 +16,31 @@ const Netflix = () => {
 
   const navigate = useNavigate()
 
+  const movies = useSelector((state)=> state.netflix.movies)
+  const genresLoaded = useSelector((state)=>state.netflix.genresLoaded)
+
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getGenres());
+  }, []);
+
+  useEffect(() => {
+        if(genresLoaded){
+          dispatch(fetchMovies({type: "all"}))
+        }
+  });
+  
+
   window.onscroll =()=>{
-    setIsScrolled(window.scrollY === 0 ? false: true)
+    setIsScrolled(window.scrollY === 0 ? false : true);
     return ()=>{window.onscroll = null}
-  }
-  console.log(isScrolled)
+  };
+
+  // console.log(movies)
+
+  // console.log(isScrolled)
   return (
     <HeroContainer>
     <div className='hero'>
@@ -34,11 +57,11 @@ const Netflix = () => {
         </div>
         <div className='buttons'>
           <button onClick={()=>navigate('/player')} className='playBtn'>Play</button>
-          <button className='moreBtn'>More</button>
+          <button className='moreBtn'>More</button>  
         </div>
       </div>
       </div>
-          <Card></Card>
+      <SliderContainer movies={movies}/>
     </HeroContainer>
   )
 }
